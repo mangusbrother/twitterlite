@@ -1,20 +1,55 @@
+function hideAlert(){
+	$("#errorBox").hide();
+	$("#tweetError").hide();
+	$("#usernameError").hide();
+}
+
+/**
+ checks if the username field and the tweet content are correct to be posted.
+ If not it populates the error field
+*/
+function verifyContents(){
+	hideAlert();
+	var verified = true;
+	var l = $("#username").val().length;
+	
+	if(l <= 0  || l > 20){
+		verified = false;
+		$("#usernameError").show();
+	}
+	l = $("#inputArea").val().length;
+	
+	if(l <=0 || l > 140){
+		$("#tweetError").show();
+		verified = false;
+	}
+	
+	if(!verified){
+		$("#errorBox").show();
+	}
+	
+	return verified;
+}
+
 function documentReadyIndex() {
 	
 	populateAll();
 	
 	$("#tweetBtn").click(function() {
-	
-		$.ajax({
-			type: "POST",
-			url:"http://localhost:8080/twitterlite/tweets",
-			data: { 
-				username : $("#username").val(), 
-				content : $("#inputArea").val()
-			},
-			success: function(data) {
-				populateAll();
-			}
-		});
+		
+		if (verifyContents()){
+			$.ajax({
+				type: "POST",
+				url:"http://localhost:8080/twitterlite/tweets",
+				data: { 
+					username : $("#username").val(), 
+					content : $("#inputArea").val()
+				},
+				success: function(data) {
+					populateAll();
+				}
+			});
+		}
 	});
 	
 	hashtagsMentionsClick();
@@ -114,7 +149,7 @@ function getDateFormatForMs(timeMs){
 		curr_min = "0" + curr_min;
 	}
 	
-	return curr_hour + " : " + curr_min + " " + a_p + " " + curr_date + "<SUP>" + sup + "</SUP> " + m_names[curr_month] + " " + curr_year ;
+	return curr_date + "<SUP>" + sup + "</SUP> " + m_names[curr_month] + " " + curr_year + " " + curr_hour + ":" + curr_min + " " + a_p;
 }
 
 function getStylingForTweet(tweet){
