@@ -1,16 +1,10 @@
-function documentReady() {
-	
-	function parseTags(elementId){
-		var content = $(elementId).html();
-		content = content.replace(/#(\\w+|\\W+)/g,function(text,link){
-			return '<a href="list.html?value='+link+'">'+link+'</a>';
-		})
-		content = content.replace(/@(\\w+|\\W+)/g,function(text,link){
-			return '<a href="list.html?value='+link+'">'+link+'</a>';
-		})
-		$(elementId).html(content);
-	}
+function parseTags(content){
+	content.replace(/(^|\s)(#[a-z\d-]+)/ig, "$1<a href=\"list.html?value=$2\">$2</a>");
+	content.replace(/(^|\s)(@[a-z\d-]+)/ig, "$1<a href=\"list.html?value=$2\">$2</a>");
+	return content;
+}
 
+function documentReady() {
 	$("#tweetBtn").click(function() {
 	
 		$.ajax({
@@ -25,16 +19,26 @@ function documentReady() {
 			}
 		});
 	});
+	populateAll();
+}
 
-	function populateAll(){
-		$.ajax({
-			type: 'GET',
-			url:"http://localhost:8080/twitterlite/messages",
-			data:{ get_param: 'value' },
-			success: function(data){
-				var names = data
-				$('allTweets').text(data);
+function populateAll(){
+	var request = $.ajax({
+		type: 'GET',
+		url:"http://localhost:8080/twitterlite/messages",
+		/*
+			data is of the following format:
+				username: ""
+				content: ""
+				date: (ms)
+				hashtags: []
+				mentions: []
+		*/
+		}).done(function(){
+			var data = $.parseJSON(request.responseText);
+			for (var i in data){
+				$("#allTweets").append("<div>"+parseTags(data[i].content)+"</div>");
 			}
 		});
-	}
-});
+
+}
