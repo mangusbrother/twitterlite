@@ -129,7 +129,7 @@ function getStylingForTweet(tweet){
 	
 
 	return "<div class=\"row\">"+
-				"<div class=\"[ col-xs-12 col-sm-offset-1 col-sm-5 ]\">"+
+				"<div class=\"[ col-xs-12 col-sm-offset-1 col-sm-5 ] panelArea\">"+
 					"<div class=\"[ panel panel-default ] panel-post\">"+
 						"<div class=\"panel-heading\">"+
 							"<h3>"+tweet.username+"</h3>"+
