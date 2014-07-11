@@ -8,51 +8,77 @@ function parseTags(content){
 	return content;
 }
 
+function hideAlert(){
+	$("#errorBox").hide();
+	$("#tweetError").hide();
+	$("#usernameError").hide();
+}
+
+/**
+ checks if the username field and the tweet content are correct to be posted.
+ If not it populates the error field
+*/
+function verifyContents(){
+	hideAlert();
+	var verified = true;
+	var l = $("#username").val().length ;
+	if(l <= 0  || l > 20){
+		verified = false;
+		$("#usernameError").show();
+	}
+	l = $("#inputArea").val().length;
+	if(l <=0 || l > 140){
+		$("#tweetError").show();
+		verified = false;
+	}
+	if(!verified){
+		$("#errorBox").show();
+	}
+	return verified;
+}
+
 function documentReady() {
 	
 	populateAll();
 
 	$("#tweetBtn").click(function() {
-	
+		if(verifyContents()){
+			$.ajax({
+				type: "POST",
+				url:"http://localhost:8080/twitterlite/tweets",
+				data: { 
+					username : $("#username").val(), 
+					content : $("#inputArea").val()
+				},
+				success: function(data) {
+					populateAll();
+				}
+			});
+		}
+	});
+	$(".hashtags").click(function() {
+		var hashtag = $(this).val();
+		hashtag = hashtag.substring(1, hashtag.length);	
 		$.ajax({
-			type: "POST",
-			url:"http://localhost:8080/twitterlite/tweets",
-			data: { 
-				username : $("#username").val(), 
-				content : $("#inputArea").val()
-			},
+			type: "GET",
+			url:"http://localhost:8080/twitterlite/messages/hashtags/" + hashtag,
 			success: function(data) {
 				populateAll();
 			}
 		});
 	});
-$(".hashtags").click(function() {
-	
-	var hashtag = $(this).val();
-	hashtag = hashtag.substring(1, hashtag.length);
-	
-	$.ajax({
-		type: "GET",
-		url:"http://localhost:8080/twitterlite/messages/hashtags/" + hashtag,
-		success: function(data) {
-			populateAll();
-		}
-	});
-});
 
-$(".mention").click(function() {
-	
-	var username = $(this).val();
-	username = username.substring(1, username.length);
-	
-	$.ajax({
-		type: "GET",
-		url:"http://localhost:8080/twitterlite/messages/mention/" + hashtag,
-		success: function(data) {
-			populateAll();
-		}
+	$(".mention").click(function() {
+		var username = $(this).val();
+		username = username.substring(1, username.length);	
+		$.ajax({
+			type: "GET",
+			url:"http://localhost:8080/twitterlite/messages/mention/" + hashtag,
+			success: function(data) {
+				populateAll();
+			}
+		});
 	});
-});
 }
 
 function getDateFormatForMs(timeMs){
@@ -96,7 +122,7 @@ function getDateFormatForMs(timeMs){
 		curr_min = "0" + curr_min;
 	}
 	
-	return curr_hour + " : " + curr_min + " " + a_p + " " + curr_date + "<SUP>" + sup + "</SUP> " + m_names[curr_month] + " " + curr_year ;
+	return curr_date + "<SUP>" + sup + "</SUP> " + m_names[curr_month] + " " + curr_year +" "+ curr_hour + ":" + curr_min + " " + a_p ;
 }
 
 function getStylingForTweet(tweet){
@@ -107,7 +133,7 @@ function getStylingForTweet(tweet){
 					"<div class=\"[ panel panel-default ] panel-post\">"+
 						"<div class=\"panel-heading\">"+
 							"<h3>"+tweet.username+"</h3>"+
-							"<h5><span>Date</span> - <span>"+getDateFormatForMs(tweet.date)+"</span> </h5>"+
+							"<h5><span>"+getDateFormatForMs(tweet.date)+"</span> </h5>"+
 						"</div>"+
 					"<div class=\"panel-body\">"+
 						"<p>"+parseTags(tweet.content)+"</p>"+
