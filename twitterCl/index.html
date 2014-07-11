@@ -1,7 +1,16 @@
 <html>
 	<head>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="script.js"></script>
+		<link rel="stylesheet" type="text/css" href="style.css">
 	</head>
 	<body>
+		<div id="postArea" name="postArea">
+			<textarea rows="3" cols="50" id="inputArea" name="inputArea" style="textArea">Write your Post here</textarea>
+			<br/>
+			<input type="button" value="Tweet" onclick="tweet()"/>
+		</div>
+		<div id="allTweets" name="allTweets">
+		</div>
 	</body>
 </html>
