@@ -1,17 +1,7 @@
-function parseTags(content){
-	//content.replace(/(^|\s)(#[a-z\d-]+)/ig, "$1<a href=\"list.html?value=$2\">$2</a>");
-	//content.replace(/(^|\s)(@[a-z\d-]+)/ig, "$1<a href=\"list.html?value=$2\">$2</a>");
-	
-	content.replace(/#(\S+)/g, '<a href=\"list.html\">#$1</a>');
-	content.replace(/@(\S+)/g, '<a href=\"list.html\">@$1</a>');
-		
-	return content;
-}
-
-function documentReady() {
+function documentReadyIndex() {
 	
 	populateAll();
-
+	
 	$("#tweetBtn").click(function() {
 	
 		$.ajax({
@@ -26,33 +16,61 @@ function documentReady() {
 			}
 		});
 	});
-$(".hashtags").click(function() {
 	
-	var hashtag = $(this).val();
-	hashtag = hashtag.substring(1, hashtag.length);
-	
-	$.ajax({
-		type: "GET",
-		url:"http://localhost:8080/twitterlite/messages/hashtags/" + hashtag,
-		success: function(data) {
-			populateAll();
-		}
-	});
-});
+	hashtagsMentionsClick();
+}
 
-$(".mention").click(function() {
+function hashtagsMentionsClick() {
 	
-	var username = $(this).val();
-	username = username.substring(1, username.length);
+	$(document).on("click", ".hashtags", function() {
 	
-	$.ajax({
-		type: "GET",
-		url:"http://localhost:8080/twitterlite/messages/mention/" + hashtag,
-		success: function(data) {
-			populateAll();
-		}
+		var hashtag = $(this).html();
+		hashtag = hashtag.substring(1, hashtag.length);
+		
+		var url = "http://localhost:8080/twitterlite/messages/hashtags/" + hashtag; 
+		
+		var request = $.ajax({
+			type: "GET",
+			url: url,
+		}).done(function() {
+			alert("hashtag");
+		
+			$("#allTweets").html("");
+			
+			var data = $.parseJSON(request.responseText);
+			for (var i in data){
+				$("#allTweets").prepend(getStylingForTweet(data[i]));
+			}
+		});
 	});
-});
+
+	$(document).on("click", ".mentions", function() {
+		
+		var username = $(this).html();
+		username = username.substring(1, username.length);
+		
+		var request = $.ajax({
+			type: "GET",
+			url:"http://localhost:8080/twitterlite/messages/mention/" + username
+		
+		}).done(function() {
+			$("#allTweets").html("");
+			
+			var data = $.parseJSON(request.responseText);
+			for (var i in data){
+				$("#allTweets").prepend(getStylingForTweet(data[i]));
+			}
+		});
+	});
+	
+}
+
+function parseTags(content){
+
+	content = content.replace(/#(\S+)/g, '<a class=\"hashtags\" href=\"list.html\">#$1</a>');
+	content = content.replace(/@(\S+)/g, '<a class=\"mentions\" href=\"list.html\">@$1</a>');
+	
+	return content;
 }
 
 function getDateFormatForMs(timeMs){
@@ -100,14 +118,13 @@ function getDateFormatForMs(timeMs){
 }
 
 function getStylingForTweet(tweet){
-	
 
 	return "<div class=\"row\">"+
 				"<div class=\"[ col-xs-12 col-sm-offset-1 col-sm-5 ]\">"+
 					"<div class=\"[ panel panel-default ] panel-post\">"+
 						"<div class=\"panel-heading\">"+
 							"<h3>"+tweet.username+"</h3>"+
-							"<h5><span>Date</span> - <span>"+getDateFormatForMs(tweet.date)+"</span> </h5>"+
+							"<h5><span>"+getDateFormatForMs(tweet.date)+"</span> </h5>"+
 						"</div>"+
 					"<div class=\"panel-body\">"+
 						"<p>"+parseTags(tweet.content)+"</p>"+
