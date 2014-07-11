@@ -1,3 +1,5 @@
+var offset;
+var limit = 10; 
 function hideAlert(){
 	$("#errorBox").hide();
 	$("#tweetError").hide();
@@ -32,8 +34,8 @@ function verifyContents(){
 }
 
 function documentReadyIndex() {
-	
 	populateAll();
+	
 	
 	$("#tweetBtn").click(function() {
 		
@@ -169,13 +171,33 @@ function getStylingForTweet(tweet){
 		"</div>";
 }
 
+
 function populateAll(){
-
+	offset = 0;
 	$("#allTweets").html("");
+	populateNext();
+}
 
+function checkNext(){
+	// check if next call results 0 to hide Next-button
+	var request2 = $.ajax({
+		type: 'GET',
+		url:"http://localhost:8080/twitterlite/messages",
+		data: {limit:limit,offset:offset}
+	}).done(function(){
+		var data2 = $.parseJSON(request2.responseText);
+		if(data2.length == 0){
+			$("#showNext").hide();
+		}else{
+			$("#showNext").show();
+		}
+	});
+}
+function populateNext(){
 	var request = $.ajax({
 		type: 'GET',
 		url:"http://localhost:8080/twitterlite/messages",
+		data: {limit:limit,offset:offset}
 		/*
 			data is of the following format:
 				username: ""
@@ -187,8 +209,9 @@ function populateAll(){
 		}).done(function(){
 			var data = $.parseJSON(request.responseText);
 			for (var i in data){
-				$("#allTweets").prepend(getStylingForTweet(data[i]));
-			}
+				$("#allTweets").append(getStylingForTweet(data[i]));
+			}	
+			offset = offset+10;
+			checkNext();
 		});
-
 }
