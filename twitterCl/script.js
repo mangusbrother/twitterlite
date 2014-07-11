@@ -34,11 +34,10 @@ function verifyContents(){
 }
 
 function documentReadyIndex() {
+	
 	populateAll();
 	
-	
 	$("#tweetBtn").click(function() {
-		
 		if (verifyContents()){
 			$.ajax({
 				type: "POST",
@@ -53,59 +52,68 @@ function documentReadyIndex() {
 			});
 		}
 	});
-	
-	hashtagsMentionsClick();
 }
 
-function hashtagsMentionsClick() {
+function documentReadyList() {
 	
-	$(document).on("click", ".hashtags", function() {
+	var hashtag = getURLParameter("hashtag");
+	var username = getURLParameter("user");
 	
-		var hashtag = $(this).html();
-		hashtag = hashtag.substring(1, hashtag.length);
-		
-		var url = "http://localhost:8080/twitterlite/messages/hashtags/" + hashtag; 
-		
-		var request = $.ajax({
-			type: "GET",
-			url: url,
-		}).done(function() {
-			alert("hashtag");
-		
-			$("#allTweets").html("");
-			
-			var data = $.parseJSON(request.responseText);
-			for (var i in data){
-				$("#allTweets").prepend(getStylingForTweet(data[i]));
-			}
-		});
+	if (hashtag != "")
+		getTweetsByHashtags(hashtag);
+	else
+		getTweetsByUser(username);
+	
+}
+function getTweetsByHashtags(hashtag) {
+	
+	var url = "http://localhost:8080/twitterlite/messages/hashtags/" + hashtag; 
+	var request = $.ajax({
+		type: "GET",
+		url: url,
+	}).done(function() {		
+		$("#allTweets").html("");
+		var data = $.parseJSON(request.responseText);
+		for (var i in data){
+			$("#allTweets").prepend(getStylingForTweet(data[i]));
+		}
 	});
+}
 
-	$(document).on("click", ".mentions", function() {
-		
-		var username = $(this).html();
-		username = username.substring(1, username.length);
-		
-		var request = $.ajax({
-			type: "GET",
-			url:"http://localhost:8080/twitterlite/messages/mention/" + username
-		
-		}).done(function() {
-			$("#allTweets").html("");
-			
-			var data = $.parseJSON(request.responseText);
-			for (var i in data){
-				$("#allTweets").prepend(getStylingForTweet(data[i]));
-			}
-		});
-	});
+function getURLParameter(sParam)
+{
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+
+    for (var i = 0; i < sURLVariables.length; i++)
+    {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam)
+        {
+            return sParameterName[1];
+        }
+    }
+}
+function getTweetsByUser(username) {
 	
+	var request = $.ajax({
+		type: "GET",
+		url:"http://localhost:8080/twitterlite/messages/mention/" + username
+	
+	}).done(function() {
+		$("#allTweets").html("");
+		
+		var data = $.parseJSON(request.responseText);
+		for (var i in data){
+			$("#allTweets").prepend(getStylingForTweet(data[i]));
+		}
+	});
 }
 
 function parseTags(content){
 
-	content = content.replace(/#(\S+)/g, '<a class=\"hashtags\" href=\"list.html\">#$1</a>');
-	content = content.replace(/@(\S+)/g, '<a class=\"mentions\" href=\"list.html\">@$1</a>');
+	content = content.replace(/#(\S+)/g, '<a class=\"hashtags\" href=\"list.html?hashtag=$1\">#$1</a>');
+	content = content.replace(/@(\S+)/g, '<a class=\"mentions\" href=\"list.html?user=$1\">@$1</a>');
 	
 	return content;
 }
@@ -171,8 +179,8 @@ function getStylingForTweet(tweet){
 		"</div>";
 }
 
-
 function populateAll(){
+
 	offset = 0;
 	$("#allTweets").html("");
 	populateNext();
@@ -214,4 +222,5 @@ function populateNext(){
 			offset = offset+10;
 			checkNext();
 		});
+
 }
