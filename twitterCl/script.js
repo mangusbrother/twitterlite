@@ -96,9 +96,11 @@ function getURLParameter(sParam)
 }
 function getTweetsByUser(username) {
 	
+	var url = "http://localhost:8080/twitterlite/messages/mention/" + username;
+	
 	var request = $.ajax({
 		type: "GET",
-		url:"http://localhost:8080/twitterlite/messages/mention/" + username
+		url:url,
 	
 	}).done(function() {
 		$("#allTweets").html("");
