@@ -3,17 +3,84 @@
 	<head>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="script.js"></script>
+		<script src="http://www.datejs.com/build/date.js" type="text/javascript"></script>
 		<link rel="stylesheet" type="text/css" href="style.css">
+		
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+		
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		
+		<title>Twitterlite</title>
+		<style>
+		body {
+			margin-top: 60px; /* 60px is the height of the navbar - change this if the navbarn height changes */
+		}
+
+		footer {
+			margin: 50px 0;
+		}
+		</style>
 	</head>
 	<body onload="documentReady()">
-		<div id="postArea">
-			<textarea rows="3" cols="50" id="inputArea" name="inputArea" style="textArea">Write your Post here</textarea>
-			<br/>
-			<input type="text" id="username" name="username" value="Post as...">
-			<button id="tweetBtn" type="button" name="tweetBtn">Tweet</button>
-		</div>		
-		<div id="allTweets" name="allTweets">
+	
+	
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Twitterlite</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <!--<div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="#user">User</a>
+                    </li>
+                </ul>
+            </div>-->
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+	
+	<div class="container">
+		<div class="row">
+				<div class="[ col-xs-12 col-sm-offset-1 col-sm-5 ]">
+					<div class="[ panel panel-default ] panel-post">
+						<div class="panel-body">					
+							<div class="panel-twitterlite-textarea">
+								<textarea id="inputArea" name="inputArea" rows="4">Write your Post Here.</textarea>
+								<div>
+									<input type="text" id="username" name="username" value="Post as...">
+									<button id="tweetBtn" type="button" name="tweetBtn" class="[ btn btn-default ]">Tweet</button>	
+								</div>
+							</div>
+							
+					</div>
+				</div>
+			</div>
 		</div>
-		
+	</div>
+	
+	<div id="allTweets" class="container">
+	</div>
+	
+	<footer>
+		<div class="row">
+			<div class="col-lg-12">
+				<p>By Aaron Axisa & Bernice Zerafa</p>
+			</div>
+		</div>
+	</footer>
 	</body>
 </html>
