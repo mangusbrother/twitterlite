@@ -67,7 +67,12 @@
 									<a class="close" href="javascript:hideAlert()">×</a>  
 									<h4 class="alert-heading">Warning!</h4>  
 									<p id="tweetError" style="display:none">Tweets must be between 1 and 140 characters.</p>
-									<p id="usernameError" style="display:none">Username must be between 1 and 20 characters.</p>
+									<div id="usernameFormatError" style="display:none"><span>Username must meet the following criteria:</span>
+										<ul>
+											<li>Can contain letters (a-Z), numbers (0-9), underscores (_)</li>
+											<li>Can contain but not start with dashes (-), apostrophes (')</li>
+											<li>Username must be between 1 and 20 characters.</li>
+										</ul></div>
 								</div> 
 							</div>
 					</div>

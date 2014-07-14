@@ -3,7 +3,7 @@ var limit = 10;
 function hideAlert(){
 	$("#errorBox").hide();
 	$("#tweetError").hide();
-	$("#usernameError").hide();
+	$("#usernameFormatError").hide();
 }
 
 /**
@@ -13,11 +13,12 @@ function hideAlert(){
 function verifyContents(){
 	hideAlert();
 	var verified = true;
-	var l = $("#username").val().length;
+	var username = $("#username").val();
+	var l = username.length;
 	
-	if(l <= 0  || l > 20){
+	if(l <= 0  || l > 20 || !username.match(/^((\w)(\w*[-']*)*)$/)){
 		verified = false;
-		$("#usernameError").show();
+		$("#usernameFormatError").show();
 	}
 	l = $("#inputArea").val().length;
 	
@@ -80,7 +81,7 @@ function getTweetsByHashtags(hashtag) {
 		$("#allTweets").html("");
 		var data = $.parseJSON(request.responseText);
 		for (var i in data){
-			$("#allTweets").prepend(getStylingForTweet(data[i]));
+			$("#allTweets").append(getStylingForTweet(data[i]));
 		}
 	});
 }
@@ -95,10 +96,11 @@ function getURLParameter(sParam)
         var sParameterName = sURLVariables[i].split('=');
         if (sParameterName[0] == sParam)
         {
-            return sParameterName[1];
+            return decodeURIComponent(sParameterName[1]);
         }
     }
 }
+
 function getTweetsByUser(username) {
 	
 	var url = "http://localhost:8080/twitterlite/messages/mention/" + username;
@@ -112,7 +114,7 @@ function getTweetsByUser(username) {
 		
 		var data = $.parseJSON(request.responseText);
 		for (var i in data){
-			$("#allTweets").prepend(getStylingForTweet(data[i]));
+			$("#allTweets").append(getStylingForTweet(data[i]));
 		}
 	});
 }
