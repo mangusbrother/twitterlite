@@ -130,9 +130,8 @@ function parseTags(content){
 
 function getDateFormatForMs(timeMs){
 	var date = $.format.prettyDate(timeMs);
-	//if(date) 
-	return date;
-	//return "This post has traveled back in time";
+	if(date) return date;
+	return "just now";
 }
 
 function getStylingForTweet(tweet){
