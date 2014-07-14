@@ -63,10 +63,10 @@ function documentReadyList() {
 	var hashtag = getURLParameter("hashtag");
 	var username = getURLParameter("user");
 	
-	if (hashtag != "") {
+	if (hashtag != "" && hashtag != undefined) {
 		getTweetsByHashtags(hashtag);
 	}
-	else if (username != "") {
+	else if (username != "" && username != undefined) {
 		getTweetsByUser(username);
 	}
 }
