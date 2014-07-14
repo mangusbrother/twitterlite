@@ -39,12 +39,16 @@ function documentReadyIndex() {
 	
 	$("#tweetBtn").click(function() {
 		if (verifyContents()){
+			
+			var contents = $("#inputArea").val();
+			$("#inputArea").val('');
+			
 			$.ajax({
 				type: "POST",
 				url:"http://localhost:8080/twitterlite/tweets",
 				data: { 
 					username : $("#username").val(), 
-					content : $("#inputArea").val()
+					content : contents
 				},
 				success: function(data) {
 					populateAll();
