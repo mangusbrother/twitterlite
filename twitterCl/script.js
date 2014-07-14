@@ -129,10 +129,10 @@ function parseTags(content){
 }
 
 function getDateFormatForMs(timeMs){
-	
 	var date = $.format.prettyDate(timeMs);
-	if(date != undefined) return date;
-	return "This post has traveled back in time";
+	//if(date) 
+	return date;
+	//return "This post has traveled back in time";
 }
 
 function getStylingForTweet(tweet){
