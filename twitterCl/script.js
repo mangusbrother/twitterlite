@@ -1,5 +1,6 @@
 var offset;
-var limit = 10; 
+var limit = 10;
+
 function hideAlert(){
 	$("#errorBox").hide();
 	$("#tweetError").hide();
@@ -72,6 +73,7 @@ function documentReadyList() {
 		getTweetsByUser(username);
 	}
 }
+
 function getTweetsByHashtags(hashtag) {
 	
 	var url = "http://localhost:8080/twitterlite/messages/hashtags/" + hashtag; 
