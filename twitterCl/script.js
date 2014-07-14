@@ -64,10 +64,11 @@ function documentReadyList() {
 	var hashtag = getURLParameter("hashtag");
 	var username = getURLParameter("user");
 	
-	if (hashtag != "" && hashtag != undefined) {
+	if (hashtag) {
 		getTweetsByHashtags(hashtag);
 	}
-	else if (username != "" && username != undefined) {
+	
+	else if (username) {
 		getTweetsByUser(username);
 	}
 }
@@ -129,7 +130,9 @@ function parseTags(content){
 
 function getDateFormatForMs(timeMs){
 	
-	return $.format.prettyDate(timeMs);
+	var date = $.format.prettyDate(timeMs);
+	if(date != undefined) return date;
+	return "This post has traveled back in time";
 }
 
 function getStylingForTweet(tweet){

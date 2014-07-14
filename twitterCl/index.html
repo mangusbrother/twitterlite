@@ -59,12 +59,12 @@
 				<div class="[ col-xs-12 col-sm-offset-1 col-sm-5 ] panelArea">
 					<div class="[ panel panel-default ] panel-post">
 						<div class="panel-body">					
-							<div class="panel-twitterlite-textarea">
+							<form name="postArea" method="post" class="panel-twitterlite-textarea">
 								<textarea id="inputArea" name="inputArea" rows="4" placeholder="Write your Post Here."></textarea>
 								<input type="text" id="username" name="username" placeholder="Post as...">
 								<button id="tweetBtn" type="button" name="tweetBtn" class="[ btn btn-default ]">Tweet</button>	
 								<div id="errorBox" style="display:none" class="alert alert-error">  
-									<a class="close" href="javascript:hideAlert()">×</a>  
+										<a class="close" href="javascript:hideAlert()">×</a>  
 									<h4 class="alert-heading">Warning!</h4>  
 									<p id="tweetError" style="display:none">Tweets must be between 1 and 140 characters.</p>
 									<div id="usernameFormatError" style="display:none"><span>Username must meet the following criteria:</span>
@@ -74,7 +74,7 @@
 											<li>Username must be between 1 and 20 characters.</li>
 										</ul></div>
 								</div> 
-							</div>
+							</form>
 					</div>
 				</div>
 			</div>
