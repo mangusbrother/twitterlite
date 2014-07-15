@@ -4,23 +4,25 @@
 			<div class="[ col-xs-12 col-sm-offset-1 col-sm-5 ] panelArea">
 				<div class="[ panel panel-default ] panel-post">
 					<div class="panel-body">					
-						<form name="postArea" class="panel-twitterlite-textarea" ng-submit="postMessage(postArea.$valid, username, content)" novalidate>
+						<form name="postArea" ng-submit="postMessage(postArea.$valid, username, content)">
 							
 							<!-- Tweet Content -->
-							<div class="form-group">
-								<textarea id="inputArea" class="form-control" rows="4" name="content" placeholder="Write your Post Here." ng-model="content" required ng-maxlength="140"></textarea>
-								<p ng-show="postArea.content.$invalid && !postArea.content.$pristine" class="help-block">Tweet must not be empty!</p>
-								<p ng-show="postArea.content.$error.maxlength" class="help-block">Tweet must be shorter than 140 characters</p>
+							<div class="form-group" >
+								<textarea id="inputArea" class="form-control" rows="4" name="content" placeholder="Write your Post Here." ng-model="content" required></textarea>
+								<!--<p ng-show="postArea.content.$error.minlength" class="help-block">Tweet must not be empty!</p>
+								<p ng-show="postArea.content.$error.maxlength" class="help-block">Tweet must be shorter than 140 characters</p>-->
 							</div>
 							
 							<!-- Tweet Username -->
 							<div class="form-group">
-								<input type="text" id="username" name="username" placeholder="Post as..." ng-model="username" ng-minlength="2">
-								<!--<p ng-show="postArea.username.$invalid && !postArea.username.$pristine" class="help-block">Username must not be empty!</p>-->
-								<p ng-show="postArea.username.$error.minlength" class="help-block">Username is too short.</p>
+								<input type="text" name="username" class="form-control" placeholder="Post as..." ng-model="username" required>
+								<!-- <p ng-show="postArea.username.$error.minlength" class="help-block">Username must not be empty!</p>
+								<p ng-show="postArea.username.$error.maxlength" class="help-block">Username is too long</p>
+								
+								<p ng-show="postArea.userName.$error.required">Username is required!</p> -->
 							</div>
 							
-							<button id="tweetBtn" type="submit" class="btn btn-primary">Tweet</button>	
+							<button type="submit" class="btn btn-primary">Tweet</button>	
 						</form>
 					</div>
 				</div>

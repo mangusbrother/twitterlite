@@ -97,7 +97,8 @@ app.controller('HomeController', ['$scope', '$http', 'CommonCode', function($sco
 	};
 	
 	$scope.postMessage = function postMessage(isValid, username, content) {
-				
+		
+		
 		if (isValid) {		
 			var xsrf = $.param({
 				username: username,
