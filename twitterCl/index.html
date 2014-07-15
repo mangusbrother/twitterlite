@@ -14,96 +14,36 @@
 	</head>
 	
 	<body>
-		<div ng-app="twitterlite">
-			<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-				<div class="container">
-					<div class="navbar-header">
-						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-							<span class="sr-only">Toggle navigation</span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-						</button>
-						<a class="navbar-brand" href="index.html">Twitterlite</a>
-					</div>
-				</div>
-			</nav>
-			
-			<div ng-controller="RetrieveMessages" ng-init='init()'>
-				<div class="container">
-					<div class="row">
-						<div class="[ col-xs-12 col-sm-offset-1 col-sm-5 ] panelArea">
-							<div class="[ panel panel-default ] panel-post">
-								<div class="panel-body">					
-									<form name="postArea" method="post" class="panel-twitterlite-textarea">
-										
-										<textarea id="inputArea" name="inputArea" rows="4" placeholder="Write your Post Here." ng-model="content"></textarea>
-										<input type="text" id="username" name="username" placeholder="Post as..." ng-model="username">
-										
-										<button id="tweetBtn" type="button" name="tweetBtn" class="[ btn btn-default ]" ng-click="postMessage(username, content)">Tweet</button>	
-										
-										<div id="errorBox" style="display:none" class="alert alert-error">  
-												<a class="close" href="javascript:hideAlert()">×</a>  
-											<h4 class="alert-heading">Warning!</h4>  
-											<p id="tweetError" style="display:none">Tweets must be between 1 and 140 characters.</p>
-											<div id="usernameFormatError" style="display:none"><span>Username must meet the following criteria:</span>
-												<ul>
-													<li>Can contain letters (a-Z), numbers (0-9), underscores (_)</li>
-													<li>Can contain but not start with dashes (-), apostrophes (')</li>
-													<li>Username must be between 1 and 20 characters.</li>
-												</ul>
-											</div>
-										</div> 
-									</form>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				
-				<div ng-repeat="message in messages">
-					<div class="row">
-						<div class="[ col-xs-12 col-sm-offset-1 col-sm-5 ] panelArea">
-								<div class="[ panel panel-default ] panel-post">
-									<div class="panel-heading">
-										<h3>{{message.username}}</h3>
-										<h5><span>{{getDateFormatForMs(message.date)}}</span></h5>
-									</div>
-								<div class="panel-body">
-									<p ng-bind-html="parseTags(message.content) | to_trusted"></p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				
-				<div id="showNext" class="container">
-					<div class="row">
-						<div class="[ col-xs-12 col-sm-offset-1 col-sm-5 ] panelArea">
-							<a href="javascript:populateNext()">
-								<div class="[ panel panel-default ] panel-post">
-									<div class="panel-body" style="text-align:center">					
-										<span>Show More</span>
-									</div>
-								</div>
-							</a>
-						</div>
-					</div>
-				</div>
-				
-				<div id="footer" class="footer">
-					<div class="container">
-						<p class="footerText">
-							By Aaron Axisa and Bernice Zerafa
-						</p>
-					</div>
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="index.html">Twitterlite</a>
 				</div>
 			</div>
+		</nav>
+		
+		<div ng-app="twitterlite">
+			<ng-view></ng-view>
 		</div>
 		
+		<div id="footer" class="footer">
+			<div class="container">
+				<p class="footerText">
+					By Aaron Axisa, Bernice Zerafa and Kurt Cutajar
+				</p>
+			</div>
+		</div>
+
 		 <!-- build:js js/libs.min.js -->
 		<script src="../bower_components/jquery/dist/jquery.min.js"></script>
 		<script src="../bower_components/angular/angular.js"></script>
+		<script src="../bower_components/angular-route/angular-route.min.js"></script>
 		<script src="../bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 		<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 		<script src="../bower_components/jquery-dateFormat/dist/jquery-dateFormat.js"></script>

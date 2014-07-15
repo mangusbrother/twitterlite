@@ -1,0 +1,58 @@
+<div ng-init='init()'>
+	<div class="container">
+		<div class="row">
+			<div class="[ col-xs-12 col-sm-offset-1 col-sm-5 ] panelArea">
+				<div class="[ panel panel-default ] panel-post">
+					<div class="panel-body">					
+						<form name="postArea" class="panel-twitterlite-textarea" ng-submit="postMessage(postArea.$valid, username, content)" novalidate>
+							
+							<!-- Tweet Content -->
+							<div class="form-group">
+								<textarea id="inputArea" class="form-control" rows="4" name="content" placeholder="Write your Post Here." ng-model="content" required ng-maxlength="140"></textarea>
+								<p ng-show="postArea.content.$invalid && !postArea.content.$pristine" class="help-block">Tweet must not be empty!</p>
+								<p ng-show="postArea.content.$error.maxlength" class="help-block">Tweet must be shorter than 140 characters</p>
+							</div>
+							
+							<!-- Tweet Username -->
+							<div class="form-group">
+								<input type="text" id="username" name="username" placeholder="Post as..." ng-model="username" ng-minlength="2">
+								<!--<p ng-show="postArea.username.$invalid && !postArea.username.$pristine" class="help-block">Username must not be empty!</p>-->
+								<p ng-show="postArea.username.$error.minlength" class="help-block">Username is too short.</p>
+							</div>
+							
+							<button id="tweetBtn" type="submit" class="btn btn-primary">Tweet</button>	
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div ng-repeat="message in messages">
+		<div class="row">
+			<div class="[ col-xs-12 col-sm-offset-1 col-sm-5 ] panelArea">
+					<div class="[ panel panel-default ] panel-post">
+						<div class="panel-heading">
+							<h3>{{message.username}}</h3>
+							<h5><span>{{service.parseDate(message.date)}}</span></h5>
+						</div>
+					<div class="panel-body">
+						<p ng-bind-html="service.parseTags(message.content) | to_trusted"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="showNext" class="container">
+		<div class="row">
+			<div class="[ col-xs-12 col-sm-offset-1 col-sm-5 ] panelArea">
+				<div class="[ panel panel-default ] panel-post">
+					<div class="panel-body" style="text-align:center">					
+						<button type="button" ng-click="getNextTweets()">Show More</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

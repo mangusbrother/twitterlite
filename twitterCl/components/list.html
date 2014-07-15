@@ -1,0 +1,31 @@
+<div ng-init='init()'>
+	<div ng-repeat="message in messages">
+		<div class="row">
+			<div class="[ col-xs-12 col-sm-offset-1 col-sm-5 ] panelArea">
+					<div class="[ panel panel-default ] panel-post">
+						<div class="panel-heading">
+							<h3>{{message.username}}</h3>
+							<h5><span>{{service.parseDate(message.date)}}</span></h5>
+						</div>
+					<div class="panel-body">
+						<p ng-bind-html="service.parseTags(message.content) | to_trusted"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="showNext" class="container">
+		<div class="row">
+			<div class="[ col-xs-12 col-sm-offset-1 col-sm-5 ] panelArea">
+				<a href="javascript:populateNext()">
+					<div class="[ panel panel-default ] panel-post">
+						<div class="panel-body" style="text-align:center">					
+							<span>Show More</span>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
