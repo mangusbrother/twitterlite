@@ -130,7 +130,7 @@ app.controller('HomeController', ['$scope', '$http', 'CommonCode', function($sco
 	};
 
 	$scope.showButton = function showButton(){
-		
+
     	return show;
     };
 
@@ -138,11 +138,19 @@ app.controller('HomeController', ['$scope', '$http', 'CommonCode', function($sco
 
 app.controller('ListController', ['$scope', '$http', '$routeParams', 'CommonCode', function($scope, $http, $routeParams, CommonCode) {
 	
+	var show = true;
+	var offset = 0;
+	var limit = 5;
 	$scope.service = CommonCode;
 	$scope.hashtag = $routeParams.hashtag;
 	$scope.mention = $routeParams.username;
 
 	$scope.init = function init() {
+
+		$scope.getNextTweets();
+	};
+
+	$scope.getNextTweets = function getMoreTweets() {
 		
 		var url = 'http://localhost:8080/twitterlite/messages/';
 		
@@ -154,13 +162,43 @@ app.controller('ListController', ['$scope', '$http', '$routeParams', 'CommonCode
 		
 		$http({
 			method: 'GET', 
-			url: url
-		
+			url: url,
+			params: {
+				limit: limit, 
+				offset: offset
+			}
 		}).success(function(data) {
-			$scope.messages = data; // response data
-		}).error(function (){
 
-			console.log('Filtered message retrieval failed.');
-		});		
+			// In case of first read, the retrieved data must be copied directly to $scope.messages
+			if (!$scope.messages) {
+
+				$scope.messages = data;
+			} 
+			// Otherwise, the retrieved data may simply be appended.
+			else{
+
+				$.each(data, function(key, msg) {
+				
+					var message = {username: msg.username, content: msg.content, date: msg.date};
+					$scope.messages.push(message);
+				});
+			}			
+			
+			// Show or hide 'Load More' button as a result of the retrieved data.
+			offset += data.length;
+
+			if (data.length === 0) {
+				
+				show = false;
+			}
+		}).error(function(){
+
+			console.log('Message retrieval failed.');
+		});
 	};
+
+	$scope.showButton = function showButton(){
+
+    	return show;
+    };
 }]);
