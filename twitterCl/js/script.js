@@ -94,8 +94,7 @@ app.controller('HomeController', ['$scope', '$http', 'CommonCode', function($sco
 			// Otherwise, the retrieved data may simply be appended.
 			else{
 
-				$.each(data, function(key, msg) {
-				
+				angular.forEach(data, function(msg, key) {
 					var message = {username: msg.username, content: msg.content, date: msg.date};
 					$scope.messages.push(message);
 				});
@@ -189,8 +188,7 @@ app.controller('ListController', ['$scope', '$http', '$routeParams', 'CommonCode
 			// Otherwise, the retrieved data may simply be appended.
 			else{
 
-				$.each(data, function(key, msg) {
-				
+				angular.forEach(data, function(msg, key) {
 					var message = {username: msg.username, content: msg.content, date: msg.date};
 					$scope.messages.push(message);
 				});
