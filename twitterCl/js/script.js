@@ -27,9 +27,10 @@ app.filter('to_trusted', ['$sce', function($sce) {
 	};
 }]);
 
-app.factory('CommonCode', function() {
+app.factory('CommonCode', function($http) {
 	var root = {};
 	
+	// Returns a sanitised version of the datw which is appropriate for display.
 	root.parseDate = function(timeMs) {
 		
 		var date = $.format.prettyDate(timeMs);
@@ -44,6 +45,21 @@ app.factory('CommonCode', function() {
 		content = content.replace(/@(\S+)/g, '<a class=\'mentions\' href=\'#/messages/mention/$1\'>@$1</a>');
 		return content;			
 	};
+
+	root.retrieveMessages = function(url, limit, offset) {
+
+		var promise = $http({
+						method: 'GET', 
+						url: url,
+						params: {
+							limit: limit, 
+							offset: offset
+						}
+					});
+
+		return promise;
+	};
+
 	return root;
 });
 
@@ -62,14 +78,8 @@ app.controller('HomeController', ['$scope', '$http', 'CommonCode', function($sco
 	
 	$scope.getNextTweets = function getNextTweets() {
 		
-		$http({
-			method: 'GET', 
-			url: 'http://localhost:8080/twitterlite/messages',
-			params: {
-				limit: limit, 
-				offset: offset
-			}
-		}).success(function(data) {
+		var promise = CommonCode.retrieveMessages('http://localhost:8080/twitterlite/messages', limit, offset);
+		promise.success(function(data) {
 
 			// In case of first read, the retrieved data must be copied directly to $scope.messages
 			if (!$scope.messages) {
@@ -159,15 +169,9 @@ app.controller('ListController', ['$scope', '$http', '$routeParams', 'CommonCode
 		} else if ($scope.mention) {
 			url = url + '/mention/' + $scope.mention;
 		}
-		
-		$http({
-			method: 'GET', 
-			url: url,
-			params: {
-				limit: limit, 
-				offset: offset
-			}
-		}).success(function(data) {
+
+		var promise = CommonCode.retrieveMessages('http://localhost:8080/twitterlite/messages', limit, offset);
+		promise.success(function(data) {
 
 			// In case of first read, the retrieved data must be copied directly to $scope.messages
 			if (!$scope.messages) {
