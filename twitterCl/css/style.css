@@ -1,24 +1,53 @@
+.alert {
+	margin-top: 50px;
+	margin-bottom:0px;
+	background-image: linear-gradient(to bottom,#f5f5f5 0,#e8e8e8 100%);
+}
+
+
+html, body {
+  height: 100%;
+}
+
 body {
 	margin-top: 60px; /* 60px is the height of the navbar - change this if the navbarn height changes */
 }
 
-footer {
-	margin: 50px 0;
+.container {
+	padding-left: 0px !important;
+}
+
+.footerText {
+	margin: 15px 0;
+	color: #999999;
+}
+
+.footer {
+	background-image: linear-gradient(to bottom,#3c3c3c 0,#222 100%);
+	position: relative;
+	margin-top: -80px; /* negative value of footer height */
+	height: 80px;
+	clear:both;
+	padding-top:20px;
+}
+
+#main {
+  	padding-bottom:100px; /* this needs to be bigger than footer height*/
 }
 
 .panel-post {
+	margin-top: 10px;
     position: relative;
     border-radius: 0px;
-    border: 1px solid rgb(216, 216, 216);
     font-family: 'Roboto', sans-serif;
 }
 
-.panel-twitterlite-textarea{
+.panel-twitterlite-textarea {
 	float:right;
 	width: 100%;
 }
 
-.panel-twitterlite-textarea  > textarea{
+.panel-twitterlite-textarea > textarea {
 	display: block;
     width: 100%;
     background-color: rgb(255, 255, 255);
@@ -27,7 +56,7 @@ footer {
     resize: vertical;
 }
 
-.panel-twitterlite-textarea  > input{
+.panel-twitterlite-textarea > input {
 	display: block;
     width: calc(85% - 3px);
 	float: left;
@@ -38,7 +67,7 @@ footer {
     resize: vertical;
 }
 
-.panel-twitterlite-textarea  > button{
+.panel-twitterlite-textarea > button {
 	margin-top: 10px;
     width: 15%;
 	float:right;
@@ -47,19 +76,16 @@ footer {
     box-shadow: rgba(0, 0, 0, 0.0470588) 0px 1px 0px 0px;
 }
 
-.alert {
-	margin-top: 50px;
-	margin-bottom:0px;
-	background-image: linear-gradient(to bottom,#f5f5f5 0,#e8e8e8 100%);
+#tweetBtn {
+	float: right;
 }
 
-.footerText {
-	margin: 20px 0;
-	color: #999999;
+#username-link {
+	color: black;
 }
 
-.footer{
-	background-color: #f5f5f5;
+#wrap {
+  min-height: 100%;
 }
 
 @media (min-width: 767px) {

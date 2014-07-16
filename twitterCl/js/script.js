@@ -13,11 +13,15 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl: 'tpl/list.html',
         controller: 'ListController'
  
-	}).when('/messages/mention/:username', {
+	}).when('/messages/mention/:mention', {
         templateUrl: 'tpl/list.html',
         controller: 'ListController'
 		
-	}).otherwise({redirectTo:'/'});
+	}).when('/messages/user/:username', {
+        templateUrl: 'tpl/list.html',
+        controller: 'ListController'
+
+    }).otherwise({redirectTo:'/'});
 }]);
 
 
@@ -153,8 +157,9 @@ app.controller('ListController', ['$scope', '$http', '$routeParams', 'CommonCode
 	var offset = 0;
 	var limit = 5;
 	$scope.service = CommonCode;
-	$scope.hashtag = $routeParams.hashtag;
-	$scope.mention = $routeParams.username;
+	var hashtag = $routeParams.hashtag;
+	var mention = $routeParams.mention;
+	var username = $routeParams.username;
 
 	$scope.init = function init() {
 
@@ -165,10 +170,12 @@ app.controller('ListController', ['$scope', '$http', '$routeParams', 'CommonCode
 		
 		var url = 'http://localhost:8080/twitterlite/messages/';
 		
-		if ($scope.hashtag) {
-			url = url + '/hashtags/' + $scope.hashtag;
-		} else if ($scope.mention) {
-			url = url + '/mention/' + $scope.mention;
+		if (hashtag) {
+			url = url + 'hashtags/' + hashtag;
+		} else if (mention) {
+			url = url + 'mention/' + mention;
+		} else if (username) {
+			url = url + 'user/' + username;
 		}
 
 		var promise = CommonCode.retrieveMessages(url, limit, offset);
