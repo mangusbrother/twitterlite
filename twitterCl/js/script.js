@@ -37,6 +37,7 @@ app.factory('CommonCode', function() {
 		return 'just now';
 	};
 	
+	// Updates mentions and hashtags within a tweet with the appropriate links.
 	root.parseTags = function(content) {
 		
 		content = content.replace(/#(\S+)/g, '<a class=\'hashtags\' href=\'#/messages/hashtags/$1\'>#$1</a>');
@@ -49,24 +50,14 @@ app.factory('CommonCode', function() {
 
 app.controller('HomeController', ['$scope', '$http', 'CommonCode', function($scope, $http, CommonCode) {
 	
-	$scope.offset = 0;
-	$scope.limit = 10;
+	var offset = 0;
+	var limit = 5;
+	var show = true;
 	$scope.service = CommonCode;
 	
 	$scope.init = function init() {
-		
-		$http({
-			method: 'GET', 
-			url: 'http://localhost:8080/twitterlite/messages',
-			params: {
-				limit: $scope.limit, 
-				offset: $scope.offset
-			}
-		}).success(function(data) {
-			
-			$scope.messages = data;
-			$scope.offset += data.length;
-		});
+
+		$scope.getNextTweets();
 	};
 	
 	$scope.getNextTweets = function getNextTweets() {
@@ -75,34 +66,45 @@ app.controller('HomeController', ['$scope', '$http', 'CommonCode', function($sco
 			method: 'GET', 
 			url: 'http://localhost:8080/twitterlite/messages',
 			params: {
-				limit: $scope.limit, 
-				offset: $scope.offset
+				limit: limit, 
+				offset: offset
 			}
 		}).success(function(data) {
+
+			// In case of first read, the retrieved data must be copied directly to $scope.messages
+			if (!$scope.messages) {
+
+				$scope.messages = data;
+			} 
+			// Otherwise, the retrieved data may simply be appended.
+			else{
+
+				$.each(data, function(key, msg) {
+				
+					var message = {username: msg.username, content: msg.content, date: msg.date};
+					$scope.messages.push(message);
+				});
+			}			
 			
-			$scope.offset += data.length;
-			
-			$.each(data, function(key, msg) {
-			
-				var message = {username: msg.username, content: msg.content, date: msg.date};
-				$scope.messages.push(message);
-			});
-			
+			// Show or hide 'Load More' button as a result of the retrieved data.
+			offset += data.length;
+
 			if (data.length === 0) {
-				$('#showNext').hide();
-			} else {
-				$('#showNext').show();
+				
+				show = false;
 			}
+		}).error(function(){
+
+			console.log('Message retrieval failed.');
 		});
 	};
 	
-	$scope.postMessage = function postMessage(isValid, username, content) {
-		
+	$scope.postMessage = function postMessage(isValid) {
 		
 		if (isValid) {		
 			var xsrf = $.param({
-				username: username,
-				content: content
+				username: $scope.formUsername,
+				content: $scope.formContent
 			});
 			
 			$http({
@@ -116,13 +118,22 @@ app.controller('HomeController', ['$scope', '$http', 'CommonCode', function($sco
 				var date = new Date().getTime();
 				var parsedDate = $scope.service.parseDate(date);
 				
-				var message = {username: username, content: content, date: parsedDate};
+				var message = {username: $scope.formUsername, content: $scope.formContent, date: parsedDate};
 				$scope.messages.unshift(message);
-				$scope.offset++;
+				offset++;
 				
+			}).error(function (){
+
+				console.log('Message posting failed.');
 			});
 		}
 	};
+
+	$scope.showButton = function showButton(){
+		
+    	return show;
+    };
+
 }]);
 
 app.controller('ListController', ['$scope', '$http', '$routeParams', 'CommonCode', function($scope, $http, $routeParams, CommonCode) {
@@ -147,6 +158,9 @@ app.controller('ListController', ['$scope', '$http', '$routeParams', 'CommonCode
 		
 		}).success(function(data) {
 			$scope.messages = data; // response data
+		}).error(function (){
+
+			console.log('Filtered message retrieval failed.');
 		});		
 	};
 }]);

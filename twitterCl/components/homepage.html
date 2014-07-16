@@ -4,18 +4,18 @@
 			<div class="[ col-xs-12 col-sm-offset-1 col-sm-5 ] panelArea">
 				<div class="[ panel panel-default ] panel-post">
 					<div class="panel-body">					
-						<form name="postArea" ng-submit="postMessage(postArea.$valid, username, content)">
+						<form name="postArea" ng-submit="postMessage(postArea.$valid)">
 							
 							<!-- Tweet Content -->
 							<div class="form-group" >
-								<textarea id="inputArea" class="form-control" rows="4" name="content" placeholder="Write your Post Here." ng-model="content" required></textarea>
+								<textarea id="inputArea" class="form-control" rows="4" name="content" placeholder="Write your Post Here." ng-model="formContent" required></textarea>
 								<!--<p ng-show="postArea.content.$error.minlength" class="help-block">Tweet must not be empty!</p>
 								<p ng-show="postArea.content.$error.maxlength" class="help-block">Tweet must be shorter than 140 characters</p>-->
 							</div>
 							
 							<!-- Tweet Username -->
 							<div class="form-group">
-								<input type="text" name="username" class="form-control" placeholder="Post as..." ng-model="username" required>
+								<input type="text" name="username" class="form-control" placeholder="Post as..." ng-model="formUsername" required>
 								<!-- <p ng-show="postArea.username.$error.minlength" class="help-block">Username must not be empty!</p>
 								<p ng-show="postArea.username.$error.maxlength" class="help-block">Username is too long</p>
 								
@@ -51,7 +51,7 @@
 			<div class="[ col-xs-12 col-sm-offset-1 col-sm-5 ] panelArea">
 				<div class="[ panel panel-default ] panel-post">
 					<div class="panel-body" style="text-align:center">					
-						<button type="button" ng-click="getNextTweets()">Show More</button>
+						<button type="button" ng-click="getNextTweets()" ng-show="showButton()">Show More</button>
 					</div>
 				</div>
 			</div>
