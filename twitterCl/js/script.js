@@ -20,6 +20,7 @@ app.config(['$routeProvider', function($routeProvider) {
 	}).otherwise({redirectTo:'/'});
 }]);
 
+
 app.filter('to_trusted', ['$sce', function($sce) {
 	
 	return function(text) {
@@ -68,7 +69,7 @@ app.controller('HomeController', ['$scope', '$http', 'CommonCode', function($sco
 	
 	var offset = 0;
 	var limit = 5;
-	var show = true;
+	var showLoadButton = true;
 	$scope.service = CommonCode;
 	
 	$scope.init = function init() {
@@ -99,9 +100,9 @@ app.controller('HomeController', ['$scope', '$http', 'CommonCode', function($sco
 			// Show or hide 'Load More' button as a result of the retrieved data.
 			offset += data.length;
 
-			if (data.length === 0) {
+			if (data.length === 0 || data.length < limit) {
 				
-				show = false;
+				showLoadButton = false;
 			}
 		}).error(function(){
 
@@ -141,14 +142,14 @@ app.controller('HomeController', ['$scope', '$http', 'CommonCode', function($sco
 
 	$scope.showButton = function showButton(){
 
-    	return show;
+    	return showLoadButton;
     };
 
 }]);
 
 app.controller('ListController', ['$scope', '$http', '$routeParams', 'CommonCode', function($scope, $http, $routeParams, CommonCode) {
 	
-	var show = true;
+	var showLoadButton = true;
 	var offset = 0;
 	var limit = 5;
 	$scope.service = CommonCode;
@@ -170,7 +171,7 @@ app.controller('ListController', ['$scope', '$http', '$routeParams', 'CommonCode
 			url = url + '/mention/' + $scope.mention;
 		}
 
-		var promise = CommonCode.retrieveMessages('http://localhost:8080/twitterlite/messages', limit, offset);
+		var promise = CommonCode.retrieveMessages(url, limit, offset);
 		promise.success(function(data) {
 
 			// In case of first read, the retrieved data must be copied directly to $scope.messages
@@ -191,18 +192,18 @@ app.controller('ListController', ['$scope', '$http', '$routeParams', 'CommonCode
 			// Show or hide 'Load More' button as a result of the retrieved data.
 			offset += data.length;
 
-			if (data.length === 0) {
+			if (data.length === 0 || data.length < limit) {
 				
-				show = false;
+				showLoadButton = false;
 			}
 		}).error(function(){
 
-			console.log('Message retrieval failed.');
+			console.log('Filtered message retrieval failed.');
 		});
 	};
 
 	$scope.showButton = function showButton(){
 
-    	return show;
+    	return showLoadButton;
     };
 }]);
