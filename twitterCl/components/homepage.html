@@ -9,17 +9,11 @@
 							<!-- Tweet Content -->
 							<div class="form-group" >
 								<textarea id="inputArea" class="form-control" rows="4" name="content" placeholder="Write your Post Here." ng-model="formContent" required></textarea>
-								<!--<p ng-show="postArea.content.$error.minlength" class="help-block">Tweet must not be empty!</p>
-								<p ng-show="postArea.content.$error.maxlength" class="help-block">Tweet must be shorter than 140 characters</p>-->
 							</div>
 							
 							<!-- Tweet Username -->
 							<div class="form-group">
 								<input type="text" name="username" class="form-control" placeholder="Post as..." ng-model="formUsername" required>
-								<!-- <p ng-show="postArea.username.$error.minlength" class="help-block">Username must not be empty!</p>
-								<p ng-show="postArea.username.$error.maxlength" class="help-block">Username is too long</p>
-								
-								<p ng-show="postArea.userName.$error.required">Username is required!</p> -->
 							</div>
 							
 							<button id="tweetBtn" type="submit" class="btn btn-primary">Tweet</button>	
@@ -39,14 +33,14 @@
 							<h5><span>{{service.parseDate(message.date)}}</span></h5>
 						</div>
 					<div class="panel-body">
-						<p ng-bind-html="service.parseTags(message.content) | to_trusted"></p>
+						<p ng-bind-html="message.content | parse_tags | to_trusted"></p>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div id="showNext" class="container" ng-show="showButton()>
+	<div id="showNext" class="container" ng-show="showButton()">
 		<div class="row">
 			<div class="[ col-xs-12 col-sm-offset-1 col-sm-5 ] panelArea">
 				<div class="[ panel ] panel-post">

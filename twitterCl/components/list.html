@@ -8,7 +8,7 @@
 							<h5><span>{{service.parseDate(message.date)}}</span></h5>
 						</div>
 					<div class="panel-body">
-						<p ng-bind-html="service.parseTags(message.content) | to_trusted"></p>
+						<p ng-bind-html="message.content | parse_tags | to_trusted"></p>
 					</div>
 				</div>
 			</div>

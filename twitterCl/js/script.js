@@ -24,7 +24,6 @@ app.config(['$routeProvider', function($routeProvider) {
     }).otherwise({redirectTo:'/'});
 }]);
 
-
 app.filter('to_trusted', ['$sce', function($sce) {
 	
 	return function(text) {
@@ -32,10 +31,21 @@ app.filter('to_trusted', ['$sce', function($sce) {
 	};
 }]);
 
+// Updates mentions and hashtags within a tweet with the appropriate links.
+app.filter('parse_tags', function() {
+	
+	return function(content) {
+		
+		content = content.replace(/#(\S+)/g, '<a class=\'hashtags\' href=\'#/messages/hashtags/$1\'>#$1</a>');
+		content = content.replace(/@(\S+)/g, '<a class=\'mentions\' href=\'#/messages/mention/$1\'>@$1</a>');
+		return content;
+	};
+});
+
 app.factory('CommonCode', function($http) {
 	var root = {};
 	
-	// Returns a sanitised version of the datw which is appropriate for display.
+	// Returns a sanitised version of the date which is appropriate for display.
 	root.parseDate = function(timeMs) {
 		
 		var date = $.format.prettyDate(timeMs);
@@ -43,24 +53,16 @@ app.factory('CommonCode', function($http) {
 		return 'just now';
 	};
 	
-	// Updates mentions and hashtags within a tweet with the appropriate links.
-	root.parseTags = function(content) {
-		
-		content = content.replace(/#(\S+)/g, '<a class=\'hashtags\' href=\'#/messages/hashtags/$1\'>#$1</a>');
-		content = content.replace(/@(\S+)/g, '<a class=\'mentions\' href=\'#/messages/mention/$1\'>@$1</a>');
-		return content;			
-	};
-
 	root.retrieveMessages = function(url, limit, offset) {
 
 		var promise = $http({
-						method: 'GET', 
-						url: url,
-						params: {
-							limit: limit, 
-							offset: offset
-						}
-					});
+							  method: 'GET', 
+							  url: url,
+						 	  params: {
+							  limit: limit, 
+							  offset: offset
+						    }
+					   });
 
 		return promise;
 	};
@@ -113,34 +115,29 @@ app.controller('HomeController', ['$scope', '$http', 'CommonCode', function($sco
 		});
 	};
 	
-	$scope.postMessage = function postMessage(isValid) {
+	$scope.postMessage = function postMessage() {
 		
-		if (isValid) {		
-			var xsrf = $.param({
+		$http({
+			method: 'POST',
+			url:'http://localhost:8080/twitterlite/tweets',
+			params: {
 				username: $scope.formUsername,
 				content: $scope.formContent
-			});
+			}
+		
+		}).success(function(data) {
 			
-			$http({
-				method: 'POST',
-				url:'http://localhost:8080/twitterlite/tweets',
-				data: xsrf,
-				headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+			var date = new Date().getTime();
+			var parsedDate = $scope.service.parseDate(date);
 			
-			}).success(function(data) {
-				
-				var date = new Date().getTime();
-				var parsedDate = $scope.service.parseDate(date);
-				
-				var message = {username: $scope.formUsername, content: $scope.formContent, date: parsedDate};
-				$scope.messages.unshift(message);
-				offset++;
-				
-			}).error(function (){
+			var message = {username: $scope.formUsername, content: $scope.formContent, date: parsedDate};
+			$scope.messages.unshift(message);
+			offset++;
+			
+		}).error(function (){
 
-				console.log('Message posting failed.');
-			});
-		}
+			console.log('Message posting failed.');
+		});
 	};
 
 	$scope.showButton = function showButton(){
@@ -186,7 +183,7 @@ app.controller('ListController', ['$scope', '$http', '$routeParams', 'CommonCode
 				$scope.messages = data;
 			} 
 			// Otherwise, the retrieved data may simply be appended.
-			else{
+			else {
 
 				angular.forEach(data, function(msg, key) {
 					var message = {username: msg.username, content: msg.content, date: msg.date};
