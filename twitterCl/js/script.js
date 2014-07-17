@@ -1,7 +1,7 @@
 /*global $:false */
 'use strict';
 
-var app = angular.module('twitterlite', ['ngSanitize', 'ngRoute']);
+var app = angular.module('twitterlite', ['ngSanitize', 'ngRoute', 'angularMoment']);
 
 app.config(['$routeProvider', function($routeProvider) { 	
 	
@@ -24,6 +24,11 @@ app.config(['$routeProvider', function($routeProvider) {
     }).otherwise({redirectTo:'/'});
 }]);
 
+app.constant('angularMomentConfig', {
+    preprocess: 'unix', // optional
+    timezone: 'Europe/London' // optional
+});
+
 app.filter('to_trusted', ['$sce', function($sce) {
 	
 	return function(text) {
@@ -44,14 +49,6 @@ app.filter('parse_tags', function() {
 
 app.factory('CommonCode', function($http) {
 	var root = {};
-	
-	// Returns a sanitised version of the date which is appropriate for display.
-	root.parseDate = function(timeMs) {
-		
-		var date = $.format.prettyDate(timeMs);
-		if(date) return date;	
-		return 'just now';
-	};
 	
 	root.retrieveMessages = function(url, limit, offset) {
 
@@ -127,10 +124,8 @@ app.controller('HomeController', ['$scope', '$http', 'CommonCode', function($sco
 		
 		}).success(function(data) {
 			
-			var date = new Date().getTime();
-			var parsedDate = $scope.service.parseDate(date);
-			
-			var message = {username: $scope.formUsername, content: $scope.formContent, date: parsedDate};
+			var date = new Date().getTime();			
+			var message = {username: $scope.formUsername, content: $scope.formContent, date: date};
 			$scope.messages.unshift(message);
 			offset++;
 			
@@ -144,7 +139,6 @@ app.controller('HomeController', ['$scope', '$http', 'CommonCode', function($sco
 
     	return showLoadButton;
     };
-
 }]);
 
 app.controller('ListController', ['$scope', '$http', '$routeParams', 'CommonCode', function($scope, $http, $routeParams, CommonCode) {
@@ -179,7 +173,6 @@ app.controller('ListController', ['$scope', '$http', '$routeParams', 'CommonCode
 
 			// In case of first read, the retrieved data must be copied directly to $scope.messages
 			if (!$scope.messages) {
-
 				$scope.messages = data;
 			} 
 			// Otherwise, the retrieved data may simply be appended.

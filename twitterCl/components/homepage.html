@@ -30,7 +30,7 @@
 					<div class="[ panel panel-default ] panel-post">
 						<div class="panel-heading">
 							<h3><a id="username-link" href="#/messages/user/{{message.username}}">{{message.username}}</a></h3>
-							<h5><span>{{service.parseDate(message.date)}}</span></h5>
+							<h5><span am-time-ago="message.date / 1000"></span></h5>
 						</div>
 					<div class="panel-body">
 						<p ng-bind-html="message.content | parse_tags | to_trusted"></p>
