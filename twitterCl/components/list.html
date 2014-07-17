@@ -8,7 +8,7 @@
 							<h5><span am-time-ago="message.date / 1000"></span></h5>
 						</div>
 					<div class="panel-body">
-						<p ng-bind-html="message.content | parse_tags | to_trusted"></p>
+						<p hashtag="{{message.content}}"></p>
 					</div>
 				</div>
 			</div>

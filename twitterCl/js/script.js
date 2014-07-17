@@ -29,37 +29,62 @@ app.constant('angularMomentConfig', {
     timezone: 'Europe/London' // optional
 });
 
-app.filter('to_trusted', ['$sce', function($sce) {
-	
-	return function(text) {
-		return $sce.trustAsHtml(text);
-	};
-}]);
-
 // Updates mentions and hashtags within a tweet with the appropriate links.
-app.filter('parse_tags', function() {
+app.filter('parseTags', function() {
 	
-	return function(content) {
-		
-		content = content.replace(/#([a-zA-Z0-9]+)/g, '<a class=\'hashtags\' href=\'#/messages/hashtags/$1\'>#$1</a>');
-		content = content.replace(/@([a-zA-Z0-9]+)/g, '<a class=\'mentions\' href=\'#/messages/mention/$1\'>@$1</a>');
-		return content;
+	return function(content, type) {
+		var convertors = 
+		{
+			hashtag : {
+				regex : /#([a-zA-Z0-9]+)/g,
+				pattern : '<a class=\'hashtags\' href=\'#/messages/hashtags/$1\'>#$1</a>'
+			},
+
+			mention : {
+				regex : /@([a-zA-Z0-9]+)/g,
+				pattern : '<a class=\'mentions\' href=\'#/messages/mention/$1\'>@$1</a>'
+			},
+
+			other : {
+				regex : '\*\\g',
+				pattern : '$1'
+			}
+		};
+
+		var convertor = convertors[type || 'other'];
+		return content.replace(convertor.regex, convertor.pattern);
 	};
 });
+
+app.directive('hashtag', ['$filter', function($filter) {
+	return {
+		restrict: 'A',
+		scope:{ hashtag:'@' },
+		link: function(scope, element, attr) {
+
+			var parseFilter = $filter('parseTags');
+			var output = parseFilter(attr.hashtag, 'hashtag');
+			output = parseFilter(output, 'mention');
+
+			element.html(output); 
+		}
+	};
+}]);
 
 app.factory('CommonCode', function($http) {
 	var root = {};
 	
 	root.retrieveMessages = function(url, limit, offset) {
 
-		var promise = $http({
-							  method: 'GET', 
-							  url: url,
-						 	  params: {
-							  limit: limit, 
-							  offset: offset
-						    }
-					   });
+		var promise = 
+		$http({
+			method: 'GET', 
+			url: url,
+		 	params: {
+				limit: limit, 
+				offset: offset
+			}
+		});
 
 		return promise;
 	};
