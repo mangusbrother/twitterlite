@@ -41,8 +41,8 @@ app.filter('parse_tags', function() {
 	
 	return function(content) {
 		
-		content = content.replace(/#(\S+)/g, '<a class=\'hashtags\' href=\'#/messages/hashtags/$1\'>#$1</a>');
-		content = content.replace(/@(\S+)/g, '<a class=\'mentions\' href=\'#/messages/mention/$1\'>@$1</a>');
+		content = content.replace(/#([a-zA-Z0-9]+)/g, '<a class=\'hashtags\' href=\'#/messages/hashtags/$1\'>#$1</a>');
+		content = content.replace(/@([a-zA-Z0-9]+)/g, '<a class=\'mentions\' href=\'#/messages/mention/$1\'>@$1</a>');
 		return content;
 	};
 });
