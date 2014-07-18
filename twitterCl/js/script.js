@@ -3,8 +3,7 @@
 
 var app = angular.module('twitterlite', ['ngSanitize', 'ngRoute', 'angularMoment']);
 
-app.config(['$routeProvider', function($routeProvider) { 	
-	
+app.config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/', {
         templateUrl: 'tpl/homepage.html',
         controller: 'HomeController'
@@ -31,7 +30,6 @@ app.constant('angularMomentConfig', {
 
 // Updates mentions and hashtags within a tweet with the appropriate links.
 app.filter('parseTags', function() {
-	
 	return function(content, type) {
 		var convertors = 
 		{
@@ -46,11 +44,10 @@ app.filter('parseTags', function() {
 			},
 
 			other : {
-				regex : '\*\\g',
+				regex : '/*/g',
 				pattern : '$1'
 			}
 		};
-
 		var convertor = convertors[type || 'other'];
 		return content.replace(convertor.regex, convertor.pattern);
 	};
@@ -75,9 +72,7 @@ app.factory('CommonCode', function($http) {
 	var root = {};
 	
 	root.retrieveMessages = function(url, limit, offset) {
-
-		var promise = 
-		$http({
+		var promise = $http({
 			method: 'GET', 
 			url: url,
 		 	params: {
@@ -85,60 +80,51 @@ app.factory('CommonCode', function($http) {
 				offset: offset
 			}
 		});
-
-		return promise;
+		return promise;		
 	};
-
 	return root;
 });
 
-
 app.controller('HomeController', ['$scope', '$http', 'CommonCode', function($scope, $http, CommonCode) {
-	
+
 	var offset = 0;
 	var limit = 5;
 	var showLoadButton = true;
 	$scope.service = CommonCode;
-	
-	$scope.init = function init() {
+	$scope.messages =[];
 
+	$scope.init = function init() {
 		$scope.getNextTweets();
 	};
 	
 	$scope.getNextTweets = function getNextTweets() {
-		
 		var promise = CommonCode.retrieveMessages('http://localhost:8080/twitterlite/messages', limit, offset);
 		promise.success(function(data) {
 
 			// In case of first read, the retrieved data must be copied directly to $scope.messages
 			if (!$scope.messages) {
-
 				$scope.messages = data;
 			} 
 			// Otherwise, the retrieved data may simply be appended.
-			else{
-
+			else {
 				angular.forEach(data, function(msg, key) {
 					var message = {username: msg.username, content: msg.content, date: msg.date};
 					$scope.messages.push(message);
 				});
-			}			
-			
-			// Show or hide 'Load More' button as a result of the retrieved data.
+			}
+			// Next time to load more data, start from last message
 			offset += data.length;
 
+			// Show or hide 'Load More' button as a result of the retrieved data.
 			if (data.length === 0 || data.length < limit) {
-				
 				showLoadButton = false;
 			}
-		}).error(function(){
-
+		}).error(function() {
 			console.log('Message retrieval failed.');
 		});
 	};
 	
 	$scope.postMessage = function postMessage() {
-		
 		$http({
 			method: 'POST',
 			url:'http://localhost:8080/twitterlite/tweets',
@@ -147,21 +133,18 @@ app.controller('HomeController', ['$scope', '$http', 'CommonCode', function($sco
 				content: $scope.formContent
 			}
 		
-		}).success(function(data) {
-			
+		}).success(function(data) {	
 			var date = new Date().getTime();			
 			var message = {username: $scope.formUsername, content: $scope.formContent, date: date};
 			$scope.messages.unshift(message);
 			offset++;
 			
-		}).error(function (){
-
+		}).error(function () {
 			console.log('Message posting failed.');
 		});
 	};
 
 	$scope.showButton = function showButton(){
-
     	return showLoadButton;
     };
 }]);
@@ -177,7 +160,6 @@ app.controller('ListController', ['$scope', '$http', '$routeParams', 'CommonCode
 	var username = $routeParams.username;
 
 	$scope.init = function init() {
-
 		$scope.getNextTweets();
 	};
 
@@ -186,13 +168,12 @@ app.controller('ListController', ['$scope', '$http', '$routeParams', 'CommonCode
 		var url = 'http://localhost:8080/twitterlite/messages/';
 		
 		if (hashtag) {
-			url = url + 'hashtags/' + hashtag;
+			url += 'hashtags/' + hashtag;
 		} else if (mention) {
-			url = url + 'mention/' + mention;
+			url += 'mention/' + mention;
 		} else if (username) {
-			url = url + 'user/' + username;
+			url += 'user/' + username;
 		}
-
 		var promise = CommonCode.retrieveMessages(url, limit, offset);
 		promise.success(function(data) {
 
@@ -208,22 +189,18 @@ app.controller('ListController', ['$scope', '$http', '$routeParams', 'CommonCode
 					$scope.messages.push(message);
 				});
 			}			
-			
 			// Show or hide 'Load More' button as a result of the retrieved data.
 			offset += data.length;
 
 			if (data.length === 0 || data.length < limit) {
-				
 				showLoadButton = false;
 			}
 		}).error(function(){
-
 			console.log('Filtered message retrieval failed.');
 		});
 	};
 
 	$scope.showButton = function showButton(){
-
     	return showLoadButton;
     };
 }]);
