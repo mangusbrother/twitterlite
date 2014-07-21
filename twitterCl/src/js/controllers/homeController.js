@@ -51,13 +51,19 @@ angular.module('twitterlite.homeController', ['twitterlite.commonCodeService'])
 					content: $scope.formContent
 				}
 			
-			}).success(function(data) {	
+			})
+
+			// On success, append the new message to the top of the message list.
+			.success(function(data) {	
 				var date = new Date().getTime();			
 				var message = {username: $scope.formUsername, content: $scope.formContent, date: date};
 				$scope.messages.unshift(message);
 				offset++;
 				
-			}).error(function () {
+			})
+
+			// Notify the user upon error.
+			.error(function () {
 				console.log('Message posting failed.');
 			});
 		};

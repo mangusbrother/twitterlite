@@ -27,7 +27,9 @@ angular.module('twitterlite.listController', ['ngRoute', 'twitterlite.commonCode
 				url += 'user/' + username;
 			}
 			var promise = CommonCode.retrieveMessages(url, limit, offset);
-			promise.success(function(data) {
+			promise.
+			// On success, update the message list.
+			success(function(data) {
 
 				// In case of first read, the retrieved data must be copied directly to $scope.messages
 				if (!$scope.messages) {
@@ -47,12 +49,16 @@ angular.module('twitterlite.listController', ['ngRoute', 'twitterlite.commonCode
 				if (data.length === 0 || data.length < limit) {
 					showLoadButton = false;
 				}
-			}).error(function(){
+			})
+
+			// Notify the user upon error.
+			.error(function(){
 				console.log('Filtered message retrieval failed.');
 			});
 		};
 
-		$scope.showButton = function showButton(){
+		// Controls the display of the 'Load More' messages panel.
+ me		$scope.showButton = function showButton(){
 	    	return showLoadButton;
 	    };
 }]);

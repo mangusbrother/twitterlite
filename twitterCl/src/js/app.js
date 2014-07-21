@@ -10,6 +10,8 @@ var app = angular.module('twitterlite', ['ngRoute',
         'twitterlite.listController'
     ]);
 
+// Configure routing within the application.
+
 app.config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/', {
         templateUrl: 'tpl/homepage.html',
@@ -30,7 +32,8 @@ app.config(['$routeProvider', function($routeProvider) {
     }).otherwise({redirectTo:'/'});
 }]);
 
+// Configure time settings of angularMoment.
 app.constant('angularMomentConfig', {
-    preprocess: 'unix', // optional
-    timezone: 'Europe/London' // optional
+    preprocess: 'unix',
+    timezone: 'Europe/Amsterdam'
 });
