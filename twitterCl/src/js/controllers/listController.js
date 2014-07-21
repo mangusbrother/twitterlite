@@ -58,7 +58,7 @@ angular.module('twitterlite.listController', ['ngRoute', 'twitterlite.commonCode
 		};
 
 		// Controls the display of the 'Load More' messages panel.
- me		$scope.showButton = function showButton(){
+ 		$scope.showButton = function showButton(){
 	    	return showLoadButton;
 	    };
 }]);
